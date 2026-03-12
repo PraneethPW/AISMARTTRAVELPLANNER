@@ -1,4 +1,4 @@
-import { model } from "../config/gemini";
+import client from "../config/openrouter";
 
 export const getTransportOptions = async (
   start: string,
@@ -17,7 +17,15 @@ Include:
 Return structured text.
 `;
 
-  const result = await model.generateContent(prompt);
+  const completion = await client.chat.completions.create({
+    model: "openai/gpt-4o-mini",
+    messages: [
+      {
+        role: "user",
+        content: prompt
+      }
+    ]
+  });
 
-  return result.response.text();
+  return completion.choices[0].message.content;
 };
