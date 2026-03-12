@@ -115,66 +115,37 @@ className="mt-5 w-full py-3 bg-blue-600 rounded-lg hover:bg-blue-500 transition"
 
 <div className="space-y-10">
 
-{/* MAP */}
-
-{result?.route && result.route.length > 0 && (
-
+{/* MAP – always show when we have any route or structured data */}
+{(result?.route?.length > 0 || result?.transport?.length > 0 || result?.crowd_prediction) && (
 <GlassCard>
-
-<h2 className="text-xl mb-4 font-semibold">
-Travel Route
-</h2>
-
-<RouteMap route={result.route}/>
-
+<h2 className="text-xl mb-4 font-semibold">Travel Route</h2>
+<RouteMap route={result.route?.length ? result.route : [{ city: start || "Start", lat: 0, lng: 0 }, { city: destination || "Destination", lat: 0, lng: 0 }]} />
 </GlassCard>
-
 )}
 
 {/* CROWD */}
-
-{result?.crowd_prediction && (
-<CrowdPrediction crowd={result.crowd_prediction}/>
+{result?.crowd_prediction && Object.keys(result.crowd_prediction).length > 0 && (
+<CrowdPrediction crowd={result.crowd_prediction} />
 )}
 
 {/* TRANSPORT */}
-
 {result?.transport && result.transport.length > 0 && (
-
 <div>
-
-<h2 className="text-xl font-semibold mb-4">
-Transport Options
-</h2>
-
+<h2 className="text-xl font-semibold mb-4">Transport Options</h2>
 <div className="grid grid-cols-2 gap-4">
-
-{result.transport.map((t:any,i:number)=>(
-<TransportCard key={i} transport={t}/>
+{result.transport.map((t: any, i: number) => (
+<TransportCard key={i} transport={t} />
 ))}
-
 </div>
-
 </div>
-
 )}
 
-{/* FALLBACK AI TEXT */}
-
-{result?.raw_response && (
-
+{/* Raw AI text only when no structured sections were shown */}
+{result?.raw_response && !result?.route?.length && !result?.transport?.length && !(result?.crowd_prediction && Object.keys(result.crowd_prediction).length > 0) && (
 <GlassCard>
-
-<h2 className="text-xl mb-4 font-semibold">
-AI Generated Plan
-</h2>
-
-<p className="text-gray-300 whitespace-pre-wrap">
-{result.raw_response}
-</p>
-
+<h2 className="text-xl mb-4 font-semibold">AI Generated Plan</h2>
+<p className="text-gray-300 whitespace-pre-wrap">{result.raw_response}</p>
 </GlassCard>
-
 )}
 
 </div>
