@@ -1,8 +1,13 @@
-import express from "express";
-import { planTrip } from "../controllers/tripController";
+import express from "express"
+import { planTrip, getUserTrips, getTripById } from "../controllers/tripController"
+import { authMiddleware } from "../middleware/authMiddleware"
 
-const router = express.Router();
+const router = express.Router()
 
-router.post("/plan", planTrip);
+router.post("/plan", authMiddleware, planTrip)
 
-export default router;
+router.get("/my-trips", authMiddleware, getUserTrips)
+
+router.get("/:id", authMiddleware, getTripById)
+
+export default router

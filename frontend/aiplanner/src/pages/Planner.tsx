@@ -1,11 +1,11 @@
 import { useState } from "react"
-import API from "../api/api"
+import { planTrip } from "../api/tripApi"
 
-import Navbar from "../components/Navbar"
-import RouteMap from "../components/RouteMap"
-import TransportCard from "../components/TransportCard"
-import CrowdPrediction from "../components/CrowdPrediction"
-import GlassCard from "../components/GlassCard"
+import DashboardLayout from "../components/layout/DashboardLayout"
+import RouteMap from "../components/planner/RouteMap"
+import CrowdPrediction from "../components/planner/CrowdPrediction"
+import TransportCard from "../components/planner/TransportCard"
+import GlassCard from "../components/ui/GlassCard"
 
 import { motion } from "framer-motion"
 
@@ -22,51 +22,52 @@ const [loading,setLoading] = useState(false)
 
 const handleSubmit = async () => {
 
-  setLoading(true)
+setLoading(true)
 
-  try{
+try{
 
-    const res = await API.post("/trip/plan",{
-      start,
-      destination,
-      budget,
-      days,
-      interests
-    })
+const res = await planTrip({
+start,
+destination,
+budget,
+days,
+interests
+})
 
-    console.log("API RESPONSE:", res.data)
+console.log("API RESPONSE:",res.data)
 
-    // backend already returns the plan inside data
-    setResult(res.data.data)
+// backend response structure
+setResult(res.data.data.plan)
 
-  }catch(error){
+}catch(error){
 
-    console.error("Trip planning error:", error)
-
-  }
-
-  setLoading(false)
+console.error("Trip planning error:",error)
 
 }
+
+setLoading(false)
+
+}
+
 return(
 
-<div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
+<DashboardLayout>
 
-<Navbar/>
-
-<div className="max-w-6xl mx-auto p-10 space-y-10">
+<div className="max-w-7xl mx-auto space-y-10">
 
 <motion.h1
- initial={{opacity:0,y:-20}}
- animate={{opacity:1,y:0}}
- className="text-4xl font-bold text-center"
+initial={{opacity:0,y:-20}}
+animate={{opacity:1,y:0}}
+className="text-3xl font-bold"
 >
-AI Smart Travel Planner
+AI Travel Planner
 </motion.h1>
+
+{/* Planner Form */}
 
 <GlassCard>
 
-<div className="grid grid-cols-2 gap-4">
+<div className="grid md:grid-cols-2 gap-4">
 
 <input
 placeholder="Start Location"
@@ -105,48 +106,79 @@ onClick={handleSubmit}
 className="mt-5 w-full py-3 bg-blue-600 rounded-lg hover:bg-blue-500 transition"
 >
 
-{loading ? "Generating Trip..." : "Generate Trip Plan"}
+{loading ? "Generating AI Travel Plan..." : "Generate Trip Plan"}
 
 </button>
 
 </GlassCard>
 
+{/* RESULTS */}
+
 {result && (
 
-<div className="space-y-10">
+<div className="grid lg:grid-cols-3 gap-8">
 
-{/* MAP – always show when we have any route or structured data */}
-{(result?.route?.length > 0 || result?.transport?.length > 0 || result?.crowd_prediction) && (
+{/* MAP */}
+
+<div className="lg:col-span-2">
+
 <GlassCard>
-<h2 className="text-xl mb-4 font-semibold">Travel Route</h2>
-<RouteMap route={result.route?.length ? result.route : [{ city: start || "Start", lat: 0, lng: 0 }, { city: destination || "Destination", lat: 0, lng: 0 }]} />
+
+<h2 className="text-xl mb-4 font-semibold">
+Travel Route
+</h2>
+
+<RouteMap
+route={
+result?.route?.length
+? result.route
+: []
+}
+/>
+
 </GlassCard>
+
+</div>
+
+{/* RIGHT PANEL */}
+
+<div className="space-y-6">
+
+{/* Crowd Prediction */}
+
+{result?.crowd_prediction && (
+
+<CrowdPrediction crowd={result.crowd_prediction}/>
+
 )}
 
-{/* CROWD */}
-{result?.crowd_prediction && Object.keys(result.crowd_prediction).length > 0 && (
-<CrowdPrediction crowd={result.crowd_prediction} />
-)}
+{/* Transport Recommendations */}
 
-{/* TRANSPORT */}
-{result?.transport && result.transport.length > 0 && (
+{result?.transport?.length > 0 && (
+
 <div>
-<h2 className="text-xl font-semibold mb-4">Transport Options</h2>
-<div className="grid grid-cols-2 gap-4">
-{result.transport.map((t: any, i: number) => (
-<TransportCard key={i} transport={t} />
+
+<h2 className="text-xl font-semibold mb-4">
+Transport Options
+</h2>
+
+<div className="space-y-4">
+
+{result.transport.map((t:any,i:number)=>(
+
+<TransportCard
+key={i}
+transport={{
+type:t.type,
+route:t.route,
+cost:t.cost,
+travel_time:t.travel_time
+}}
+/>
+
 ))}
-</div>
-</div>
-)}
 
-{/* Raw AI text only when no structured sections were shown */}
-{result?.raw_response && !result?.route?.length && !result?.transport?.length && !(result?.crowd_prediction && Object.keys(result.crowd_prediction).length > 0) && (
-<GlassCard>
-<h2 className="text-xl mb-4 font-semibold">AI Generated Plan</h2>
-<p className="text-gray-300 whitespace-pre-wrap">{result.raw_response}</p>
-</GlassCard>
-)}
+</div>
 
 </div>
 
@@ -155,6 +187,12 @@ className="mt-5 w-full py-3 bg-blue-600 rounded-lg hover:bg-blue-500 transition"
 </div>
 
 </div>
+
+)}
+
+</div>
+
+</DashboardLayout>
 
 )
 

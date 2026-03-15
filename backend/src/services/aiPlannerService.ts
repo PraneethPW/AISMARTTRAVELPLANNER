@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"
 
 export const generateTripPlan = async (
   start: string,
@@ -7,132 +7,169 @@ export const generateTripPlan = async (
   days: number,
   interests: string
 ) => {
-  const prompt = `
-You are an AI travel planner.
 
-Return ONLY valid JSON.
+const prompt = `
+You are an expert travel planning AI.
 
-Trip Details:
+Generate a realistic travel plan.
+
 Start: ${start}
 Destination: ${destination}
 Budget: ${budget}
 Days: ${days}
 Interests: ${interests}
 
-Return JSON in this format. Use real approximate latitude and longitude for each city (e.g. Mumbai: 19.07, 72.87; Delhi: 28.61, 77.21).
+Return ONLY JSON in this exact format:
 
 {
  "route":[
-   {"city":"${start}","lat":<number>,"lng":<number>},
-   {"city":"intermediate city if any","lat":<number>,"lng":<number>},
-   {"city":"${destination}","lat":<number>,"lng":<number>}
+   {"city":"${start}","lat":17.3850,"lng":78.4867},
+   {"city":"${destination}","lat":13.0827,"lng":80.2707}
  ],
- "route_optimization":{
-   "best_route":"",
-   "alternative_routes":[]
- },
  "transport":[
-   {
-     "type":"",
-     "route":"",
-     "cost":"",
-     "travel_time":""
-   }
+   {"type":"Train","route":"${start} to ${destination} Express","cost":"800","travel_time":"10 hours"},
+   {"type":"Bus","route":"Sleeper Bus ${start} to ${destination}","cost":"600","travel_time":"12 hours"},
+   {"type":"Flight","route":"Direct Flight ${start} to ${destination}","cost":"4000","travel_time":"1 hour"}
  ],
  "crowd_prediction":{
-   "bus":"Low / Medium / High",
-   "train":"Low / Medium / High",
-   "tourist_spots":"Low / Medium / High"
+   "bus":"Medium",
+   "train":"High",
+   "tourist_spots":"Moderate"
  },
- "best_travel_time":"",
  "hotels":[
-   {
-     "name":"",
-     "price_per_night":"",
-     "location":""
-   }
+   {"name":"City Hotel","price_per_night":"1500","location":"City Center"}
  ],
  "places":[
-   {
-     "name":"",
-     "description":""
-   }
- ],
- "total_estimated_cost":""
+   {"name":"Popular Beach","description":"Beautiful tourist destination"}
+ ]
 }
-`;
+`
 
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    console.error("❌ OPENROUTER_API_KEY is missing in .env");
-    throw new Error("AI trip planning failed: API key not configured");
-  }
+try{
 
-  try {
-    const response = await axios.post(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        model: "openai/gpt-4o-mini",
-        messages: [
-          {
-            role: "user",
-            content: prompt
-          }
-        ]
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "HTTP-Referer": "http://localhost:5173",
-          "X-Title": "AI Smart Travel Planner",
-          "Content-Type": "application/json"
-        }
-      }
-    );
+const response = await axios.post(
+"https://openrouter.ai/api/v1/chat/completions",
+{
+model:"openai/gpt-4o-mini",
+messages:[
+{
+role:"user",
+content:prompt
+}
+],
+temperature:0.7
+},
+{
+headers:{
+Authorization:`Bearer ${process.env.OPENROUTER_API_KEY}`,
+"Content-Type":"application/json"
+}
+}
+)
 
-    let text = response.data.choices[0].message.content || "{}";
-    text = text.replace(/```json/g, "").replace(/```/g, "");
+let text = response.data.choices[0].message.content
 
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      try {
-        const parsed = JSON.parse(jsonMatch[0]);
-        // Normalize: ensure arrays/objects exist; remove raw_response so frontend shows map/cards
-        return {
-          route: Array.isArray(parsed.route) ? parsed.route : [],
-          route_optimization: parsed.route_optimization || {},
-          transport: Array.isArray(parsed.transport) ? parsed.transport : [],
-          crowd_prediction: parsed.crowd_prediction && typeof parsed.crowd_prediction === "object" ? parsed.crowd_prediction : {},
-          best_travel_time: parsed.best_travel_time || "",
-          hotels: Array.isArray(parsed.hotels) ? parsed.hotels : [],
-          places: Array.isArray(parsed.places) ? parsed.places : [],
-          total_estimated_cost: parsed.total_estimated_cost || "",
-          raw_response: undefined
-        };
-      } catch {
-        console.warn("⚠ JSON parse failed");
-      }
-    }
+console.log("Raw AI response:",text)
 
-    return {
-      route: [],
-      transport: [],
-      crowd_prediction: {},
-      raw_response: text
-    };
+/* REMOVE MARKDOWN */
+text = text.replace(/```json/g,"").replace(/```/g,"")
 
-  } catch (error: any) {
-    console.error("AI planner service error:", error.response?.data || error.message);
-    
-    // Handle specific OpenRouter errors
-    if (error.response?.status === 401) {
-      console.error("❌ Invalid or missing OPENROUTER_API_KEY. Check your .env file.");
-    } else if (error.response?.status === 404) {
-      console.error("❌ Model not found. Check https://openrouter.ai/models");
-    } else if (error.response?.status === 402) {
-      console.error("❌ Insufficient credits. Add funds at openrouter.ai");
-    }
-    
-    throw new Error("AI trip planning failed");
-  }
-};
+const jsonMatch = text.match(/\{[\s\S]*\}/)
+
+if(!jsonMatch){
+throw new Error("Invalid AI JSON response")
+}
+
+const aiResponse = JSON.parse(jsonMatch[0])
+
+/* -------- NORMALIZATION -------- */
+
+// ROUTE
+const route = (aiResponse.route || []).map((r:any)=>({
+city:r.city || "",
+lat:Number(r.lat) || 0,
+lng:Number(r.lng) || 0
+}))
+
+
+// TRANSPORT
+let transport:any[] = []
+
+if(Array.isArray(aiResponse.transport)){
+transport = aiResponse.transport
+}
+else if(aiResponse.transport){
+transport = [aiResponse.transport]
+}
+
+const normalizedTransport = transport.map((t:any)=>({
+type:t.type || "",
+route:t.route || "",
+cost:Number(t.cost) || 0,
+travel_time:t.travel_time || t.travelTime || ""
+}))
+
+
+// CROWD PREDICTION
+const crowdPrediction =
+aiResponse.crowd_prediction ||
+aiResponse.crowdPrediction ||
+{}
+
+const normalizedCrowd = {
+bus:crowdPrediction.bus || "Medium",
+train:crowdPrediction.train || "Medium",
+tourist_spots:crowdPrediction.tourist_spots || crowdPrediction.touristSpots || "Moderate"
+}
+
+
+// HOTELS
+const hotels = (aiResponse.hotels || []).map((h:any)=>({
+name:h.name || "",
+price_per_night:Number(h.price_per_night || h.pricePerNight) || 0,
+location:h.location || ""
+}))
+
+
+// PLACES
+const places = (aiResponse.places || []).map((p:any)=>({
+name:p.name || "",
+description:p.description || ""
+}))
+
+
+/* FINAL RESPONSE */
+
+return{
+
+route:route,
+
+transport:normalizedTransport,
+
+crowd_prediction:normalizedCrowd,
+
+hotels:hotels,
+
+places:places
+
+}
+
+}catch(error){
+
+console.error("AI planner error:",error)
+
+return{
+route:[],
+transport:[],
+crowd_prediction:{
+bus:"Medium",
+train:"Medium",
+tourist_spots:"Moderate"
+},
+hotels:[],
+places:[]
+}
+
+}
+
+}
