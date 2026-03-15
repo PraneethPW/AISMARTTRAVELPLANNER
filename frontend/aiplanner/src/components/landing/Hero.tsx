@@ -1,33 +1,6 @@
 import { motion } from "framer-motion"
-import { useNavigate } from "react-router-dom"
 
 export default function Hero(){
-
-const navigate = useNavigate()
-
-const handleStartPlanning = () => {
-
-const token = localStorage.getItem("token")
-
-if(token){
-navigate("/planner")
-}else{
-navigate("/login")
-}
-
-}
-
-const handleTryDemo = () => {
-
-const token = localStorage.getItem("token")
-
-if(token){
-navigate("/planner")
-}else{
-navigate("/signup")
-}
-
-}
 
 return(
 
@@ -43,6 +16,8 @@ return(
 {/* content */}
 <div className="relative z-10 max-w-4xl px-6">
 
+{/* Title */}
+
 <motion.h1
 initial={{opacity:0,y:40}}
 animate={{opacity:1,y:0}}
@@ -51,6 +26,8 @@ className="text-5xl md:text-6xl font-bold leading-tight"
 >
 AI Smart Travel Planner
 </motion.h1>
+
+{/* Subtitle */}
 
 <motion.p
 initial={{opacity:0,y:20}}
@@ -61,33 +38,75 @@ className="mt-6 text-lg text-gray-300"
 Plan smarter trips with AI powered route optimization, crowd prediction and intelligent travel insights.
 </motion.p>
 
-{/* CTA Buttons */}
+
+{/* Feature badges replacing buttons */}
 
 <motion.div
 initial={{opacity:0,y:20}}
 animate={{opacity:1,y:0}}
 transition={{delay:0.4}}
-className="mt-10 flex gap-4 justify-center"
+className="mt-12 flex flex-wrap justify-center gap-4"
 >
 
-<button
-onClick={handleStartPlanning}
-className="px-8 py-4 bg-gradient-to-r from-orange-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition"
->
-Start Planning
-</button>
+<div className="px-5 py-2 bg-white/10 backdrop-blur border border-white/10 rounded-full text-sm text-gray-300">
+AI Route Optimization
+</div>
 
-<button
-onClick={handleTryDemo}
-className="px-8 py-4 border border-gray-600 rounded-xl hover:bg-white/10 transition"
->
-Try Demo
-</button>
+<div className="px-5 py-2 bg-white/10 backdrop-blur border border-white/10 rounded-full text-sm text-gray-300">
+Live Crowd Prediction
+</div>
+
+<div className="px-5 py-2 bg-white/10 backdrop-blur border border-white/10 rounded-full text-sm text-gray-300">
+Smart Budget Planning
+</div>
+
+<div className="px-5 py-2 bg-white/10 backdrop-blur border border-white/10 rounded-full text-sm text-gray-300">
+Transport Recommendations
+</div>
 
 </motion.div>
 
 
-{/* Feature Cards */}
+{/* Stats Section */}
+
+<motion.div
+initial={{opacity:0,y:20}}
+animate={{opacity:1,y:0}}
+transition={{delay:0.6}}
+className="flex justify-center gap-12 mt-12 text-gray-400"
+>
+
+<div>
+<p className="text-2xl font-bold text-white">
+10K+
+</p>
+<p className="text-sm">
+Trips Planned
+</p>
+</div>
+
+<div>
+<p className="text-2xl font-bold text-white">
+95%
+</p>
+<p className="text-sm">
+Route Accuracy
+</p>
+</div>
+
+<div>
+<p className="text-2xl font-bold text-white">
+50+
+</p>
+<p className="text-sm">
+Cities Supported
+</p>
+</div>
+
+</motion.div>
+
+
+{/* Feature cards */}
 
 <div className="grid md:grid-cols-3 gap-6 mt-20">
 
