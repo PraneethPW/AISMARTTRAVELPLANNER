@@ -1,7 +1,33 @@
 import { motion } from "framer-motion"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 export default function Hero(){
+
+const navigate = useNavigate()
+
+const handleStartPlanning = () => {
+
+const token = localStorage.getItem("token")
+
+if(token){
+navigate("/planner")
+}else{
+navigate("/login")
+}
+
+}
+
+const handleTryDemo = () => {
+
+const token = localStorage.getItem("token")
+
+if(token){
+navigate("/planner")
+}else{
+navigate("/signup")
+}
+
+}
 
 return(
 
@@ -35,7 +61,8 @@ className="mt-6 text-lg text-gray-300"
 Plan smarter trips with AI powered route optimization, crowd prediction and intelligent travel insights.
 </motion.p>
 
-{/* CTA */}
+{/* CTA Buttons */}
+
 <motion.div
 initial={{opacity:0,y:20}}
 animate={{opacity:1,y:0}}
@@ -43,44 +70,61 @@ transition={{delay:0.4}}
 className="mt-10 flex gap-4 justify-center"
 >
 
-<Link
-to="/planner"
+<button
+onClick={handleStartPlanning}
 className="px-8 py-4 bg-gradient-to-r from-orange-500 to-pink-500 rounded-xl font-semibold hover:scale-105 transition"
 >
 Start Planning
-</Link>
+</button>
 
-<Link
-to="/login"
+<button
+onClick={handleTryDemo}
 className="px-8 py-4 border border-gray-600 rounded-xl hover:bg-white/10 transition"
 >
 Try Demo
-</Link>
+</button>
 
 </motion.div>
 
-{/* feature cards */}
+
+{/* Feature Cards */}
+
 <div className="grid md:grid-cols-3 gap-6 mt-20">
 
-<div className="bg-white/10 backdrop-blur p-6 rounded-xl border border-white/10">
-<h3 className="text-lg font-semibold">AI Route Optimization</h3>
+<div className="bg-white/10 backdrop-blur p-6 rounded-xl border border-white/10 hover:border-orange-400 transition">
+
+<h3 className="text-lg font-semibold">
+AI Route Optimization
+</h3>
+
 <p className="text-gray-400 text-sm mt-2">
 Smart travel routes generated using AI and geographic data.
 </p>
+
 </div>
 
-<div className="bg-white/10 backdrop-blur p-6 rounded-xl border border-white/10">
-<h3 className="text-lg font-semibold">Crowd Prediction</h3>
+<div className="bg-white/10 backdrop-blur p-6 rounded-xl border border-white/10 hover:border-purple-400 transition">
+
+<h3 className="text-lg font-semibold">
+Crowd Prediction
+</h3>
+
 <p className="text-gray-400 text-sm mt-2">
 Predict crowd levels at tourist spots before you visit.
 </p>
+
 </div>
 
-<div className="bg-white/10 backdrop-blur p-6 rounded-xl border border-white/10">
-<h3 className="text-lg font-semibold">Transport Suggestions</h3>
+<div className="bg-white/10 backdrop-blur p-6 rounded-xl border border-white/10 hover:border-blue-400 transition">
+
+<h3 className="text-lg font-semibold">
+Transport Suggestions
+</h3>
+
 <p className="text-gray-400 text-sm mt-2">
 AI recommends flights, trains and buses based on budget.
 </p>
+
 </div>
 
 </div>
