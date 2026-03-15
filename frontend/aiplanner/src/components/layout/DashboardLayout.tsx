@@ -1,67 +1,70 @@
-import { LayoutDashboard, Map, Bookmark } from "lucide-react"
-import { Link } from "react-router-dom"
+import { useState } from "react"
+import Sidebar from "./Sidebar"
+import { Menu } from "lucide-react"
 
-type SidebarProps = {
-  closeSidebar?: () => void
-}
+export default function DashboardLayout({ children }: any) {
 
-export default function Sidebar({ closeSidebar }: SidebarProps) {
+const [open, setOpen] = useState(false)
 
-return(
+return (
 
-<div className="w-64 h-screen bg-black text-white p-6 border-r border-white/10">
+<div className="flex min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
 
-{/* Logo */}
+{/* MOBILE TOP BAR */}
 
-<h1 className="text-2xl font-bold mb-10">
+<div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 bg-black/80 backdrop-blur border-b border-white/10">
+
+<button onClick={() => setOpen(true)}>
+<Menu size={26}/>
+</button>
+
+<h1 className="font-semibold text-lg">
 TravelAI
 </h1>
 
-
-{/* Navigation */}
-
-<nav className="space-y-6">
-
-<Link
-to="/dashboard"
-onClick={closeSidebar}
-className="flex items-center gap-3 text-gray-300 hover:text-white transition"
->
-
-<LayoutDashboard size={20} />
-
-Dashboard
-
-</Link>
+</div>
 
 
-<Link
-to="/planner"
-onClick={closeSidebar}
-className="flex items-center gap-3 text-gray-300 hover:text-white transition"
->
+{/* DESKTOP SIDEBAR */}
 
-<Map size={20} />
-
-Planner
-
-</Link>
+<div className="hidden md:block">
+<Sidebar />
+</div>
 
 
-<Link
-to="/saved-trips"
-onClick={closeSidebar}
-className="flex items-center gap-3 text-gray-300 hover:text-white transition"
->
+{/* MOBILE SIDEBAR */}
 
-<Bookmark size={20} />
+{open && (
 
-Saved Trips
+<div className="fixed inset-0 z-40 flex">
 
-</Link>
+{/* Sidebar */}
+
+<div className="w-64 bg-black border-r border-white/10">
+
+<Sidebar closeSidebar={() => setOpen(false)} />
+
+</div>
+
+{/* Overlay */}
+
+<div
+className="flex-1 bg-black/60"
+onClick={() => setOpen(false)}
+></div>
+
+</div>
+
+)}
 
 
-</nav>
+{/* MAIN CONTENT */}
+
+<div className="flex-1 p-6 md:p-8 pt-20 md:pt-8 overflow-y-auto">
+
+{children}
+
+</div>
 
 </div>
 

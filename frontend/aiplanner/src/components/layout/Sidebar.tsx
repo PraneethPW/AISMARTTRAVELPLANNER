@@ -1,29 +1,65 @@
+import { LayoutDashboard, Map, Bookmark } from "lucide-react"
 import { Link } from "react-router-dom"
-import { LayoutDashboard, Route, Bookmark } from "lucide-react"
 
-export default function Sidebar(){
+type SidebarProps = {
+  closeSidebar?: () => void
+}
+
+export default function Sidebar({ closeSidebar }: SidebarProps) {
 
 return(
 
-<div className="w-64 bg-black/50 backdrop-blur-xl border-r border-white/10 p-6">
+<div className="w-64 h-screen bg-black text-white p-6 border-r border-white/10">
 
-<h1 className="text-xl font-bold mb-10 text-white">
+{/* Logo */}
+
+<h1 className="text-2xl font-bold mb-10">
 TravelAI
 </h1>
 
-<nav className="flex flex-col gap-5 text-gray-300">
 
-<Link to="/dashboard" className="flex items-center gap-2">
-<LayoutDashboard size={18}/> Dashboard
+{/* Navigation */}
+
+<nav className="space-y-6">
+
+<Link
+to="/dashboard"
+onClick={closeSidebar}
+className="flex items-center gap-3 text-gray-300 hover:text-white transition"
+>
+
+<LayoutDashboard size={20} />
+
+Dashboard
+
 </Link>
 
-<Link to="/planner" className="flex items-center gap-2">
-<Route size={18}/> Planner
+
+<Link
+to="/planner"
+onClick={closeSidebar}
+className="flex items-center gap-3 text-gray-300 hover:text-white transition"
+>
+
+<Map size={20} />
+
+Planner
+
 </Link>
 
-<Link to="/trips" className="flex items-center gap-2">
-<Bookmark size={18}/> Saved Trips
+
+<Link
+to="/saved-trips"
+onClick={closeSidebar}
+className="flex items-center gap-3 text-gray-300 hover:text-white transition"
+>
+
+<Bookmark size={20} />
+
+Saved Trips
+
 </Link>
+
 
 </nav>
 
