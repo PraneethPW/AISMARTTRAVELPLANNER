@@ -1,4 +1,4 @@
-import { LayoutDashboard, Map, Bookmark } from "lucide-react"
+import { LayoutDashboard, Map } from "lucide-react"
 import { Link } from "react-router-dom"
 
 type SidebarProps = {
@@ -46,20 +46,6 @@ className="flex items-center gap-3 text-gray-300 hover:text-white transition"
 Planner
 
 </Link>
-
-
-<Link
-to="/saved-trips"
-onClick={closeSidebar}
-className="flex items-center gap-3 text-gray-300 hover:text-white transition"
->
-
-<Bookmark size={20} />
-
-Saved Trips
-
-</Link>
-
 
 </nav>
 
