@@ -17,3 +17,9 @@ Copy `.env.example` to `.env` and set:
 ```bash
 VITE_API_URL=http://localhost:5000/api
 ```
+
+For Vercel, use `.env.production.example` as the reference:
+
+```bash
+VITE_API_URL=https://aismarttravelplanner-production.up.railway.app/api
+```

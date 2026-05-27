@@ -4,10 +4,21 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes";
 import tripRoutes from "./routes/tripRoutes";
 import { errorHandler } from "./middleware/errorMiddleware";
+import { env } from "./config/env";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || env.corsOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error(`CORS blocked origin: ${origin}`));
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 // health route

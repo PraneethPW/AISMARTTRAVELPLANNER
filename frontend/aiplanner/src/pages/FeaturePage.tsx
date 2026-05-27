@@ -29,6 +29,11 @@ const SectionTitle = ({ title, subtitle }: { title: string; subtitle?: string })
   </div>
 )
 
+const toList = <T,>(value: T[] | T | null | undefined): T[] => {
+  if (!value) return []
+  return Array.isArray(value) ? value : [value]
+}
+
 const StayCard = ({ stay, label }: { stay: StayOption; label: string }) => (
   <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
     <div className="flex items-start justify-between gap-3">
@@ -136,17 +141,17 @@ export default function FeaturePage({ type }: FeaturePageProps) {
         {plan && type === "map" && (
           <section className="grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">
             <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-              <RouteMap route={plan.route || []} />
+              <RouteMap route={toList(plan.route)} />
             </div>
             <div className="space-y-4">
               <SectionTitle title="Generated map layers" subtitle="Built from your destination and interests." />
-              {(plan.map_layers || []).map((layer) => (
-                <div key={layer.name} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                  <h3 className="font-black">{layer.name}</h3>
-                  <p className="mt-2 text-sm text-slate-600">{layer.use_case}</p>
+              {toList(plan.map_layers).map((layer, index) => (
+                <div key={`${layer.name || "layer"}-${index}`} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <h3 className="font-black">{layer.name || "Map layer"}</h3>
+                  <p className="mt-2 text-sm text-slate-600">{layer.use_case || "Generated from your latest trip plan."}</p>
                   <div className="mt-4 flex flex-wrap gap-2">
-                    {layer.items.map((item) => (
-                      <span key={item} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">{item}</span>
+                    {toList(layer.items).map((item, itemIndex) => (
+                      <span key={`${item}-${itemIndex}`} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">{String(item)}</span>
                     ))}
                   </div>
                 </div>
