@@ -1,9 +1,13 @@
 import { Pool } from "pg";
+import { env } from "./env";
+
+const databaseUrl = new URL(env.databaseUrl);
+databaseUrl.searchParams.delete("sslmode");
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: databaseUrl.toString(),
   ssl: {
-    rejectUnauthorized: false
+    rejectUnauthorized: env.dbSslRejectUnauthorized
   }
 });
 

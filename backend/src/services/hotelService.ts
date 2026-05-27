@@ -1,4 +1,5 @@
 import client from "../config/openrouter";
+import { env } from "../config/env";
 
 export const getHotelSuggestions = async (
   destination: string,
@@ -17,7 +18,7 @@ Return:
 `;
 
   const completion = await client.chat.completions.create({
-    model: "openai/gpt-4o-mini",
+    model: env.openRouterModel,
     messages: [
       {
         role: "user",

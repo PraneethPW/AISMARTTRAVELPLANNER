@@ -1,127 +1,61 @@
 import { useEffect } from "react"
 import L from "leaflet"
-
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Polyline,
-  Popup,
-  useMap
-} from "react-leaflet"
-
+import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
+import type { RoutePoint } from "../../types/trip"
 
-/* Fix leaflet default marker issue in Vite */
 const DefaultIcon = L.icon({
-  iconUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconUrl: import.meta.env.VITE_LEAFLET_MARKER_ICON_URL,
+  iconRetinaUrl: import.meta.env.VITE_LEAFLET_MARKER_ICON_RETINA_URL,
+  shadowUrl: import.meta.env.VITE_LEAFLET_MARKER_SHADOW_URL,
   iconSize: [25, 41],
-  iconAnchor: [12, 41]
+  iconAnchor: [12, 41],
 })
 
 L.Marker.prototype.options.icon = DefaultIcon
 
-/* Fit map bounds automatically */
-
-function FitBounds({ positions }: any) {
-
+function FitBounds({ positions }: { positions: [number, number][] }) {
   const map = useMap()
 
   useEffect(() => {
-
     if (!positions || positions.length === 0) return
 
-    const valid = positions.filter(
-      ([lat, lng]: any) => lat !== 0 && lng !== 0
-    )
+    const valid = positions.filter(([lat, lng]) => lat !== 0 && lng !== 0)
 
     if (valid.length > 0) {
       map.fitBounds(valid, { padding: [30, 30] })
     }
-
-  }, [positions])
+  }, [positions, map])
 
   return null
 }
 
-export default function RouteMap({ route }: any) {
-
+export default function RouteMap({ route }: { route: RoutePoint[] }) {
   if (!route || route.length === 0) {
-
     return (
-
-      <div className="h-[450px] flex items-center justify-center bg-gray-800/40 rounded-lg">
-
-        <p className="text-gray-400">
-          No route available yet
-        </p>
-
+      <div className="flex h-[420px] items-center justify-center bg-slate-100">
+        <p className="text-sm font-bold text-slate-500">Generate a trip to load the route map</p>
       </div>
-
     )
-
   }
 
-  const positions = route.map((p: any) => [
-    Number(p.lat) || 0,
-    Number(p.lng) || 0
-  ])
-
-  const center =
-    positions[0][0] === 0 ? [20, 77] : positions[0]
+  const positions = route.map((point) => [Number(point.lat) || 0, Number(point.lng) || 0]) as [number, number][]
+  const center: [number, number] = positions[0][0] === 0 ? [20, 77] : positions[0]
 
   return (
+    <MapContainer center={center} zoom={5} style={{ height: "420px", width: "100%" }} scrollWheelZoom>
+      <TileLayer url={import.meta.env.VITE_MAP_TILE_URL} />
+      <FitBounds positions={positions} />
 
-    <div className="rounded-lg overflow-hidden border border-white/10">
+      {route.map((point, index) => (
+        <Marker key={index} position={[Number(point.lat) || 0, Number(point.lng) || 0]}>
+          <Popup>
+            <strong>{point.city}</strong>
+          </Popup>
+        </Marker>
+      ))}
 
-      <MapContainer
-        center={center as any}
-        zoom={5}
-        style={{ height: "450px", width: "100%" }}
-        scrollWheelZoom
-      >
-
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-
-        <FitBounds positions={positions} />
-
-        {route.map((point: any, i: number) => (
-
-          <Marker
-            key={i}
-            position={[
-              Number(point.lat) || 0,
-              Number(point.lng) || 0
-            ]}
-          >
-
-            <Popup>
-
-              <strong>{point.city}</strong>
-
-            </Popup>
-
-          </Marker>
-
-        ))}
-
-        <Polyline
-          positions={positions}
-          color="blue"
-          weight={4}
-        />
-
-      </MapContainer>
-
-    </div>
-
+      <Polyline positions={positions} color="#0891b2" weight={5} />
+    </MapContainer>
   )
-
 }

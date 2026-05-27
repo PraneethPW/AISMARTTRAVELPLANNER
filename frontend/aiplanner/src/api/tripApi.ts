@@ -1,6 +1,7 @@
 import API from "./api"
+import type { TripRequest } from "../types/trip"
 
-export const planTrip = (data:any)=>{
+export const planTrip = (data: TripRequest)=>{
   return API.post("/trip/plan",data)
 }
 

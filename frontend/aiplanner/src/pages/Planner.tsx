@@ -1,199 +1,82 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { Loader2, Sparkles } from "lucide-react"
 import { planTrip } from "../api/tripApi"
-
 import DashboardLayout from "../components/layout/DashboardLayout"
-import RouteMap from "../components/planner/RouteMap"
-import CrowdPrediction from "../components/planner/CrowdPrediction"
-import TransportCard from "../components/planner/TransportCard"
-import GlassCard from "../components/ui/GlassCard"
 
-import { motion } from "framer-motion"
-
-export default function Planner(){
-
-const [start,setStart] = useState("")
-const [destination,setDestination] = useState("")
-const [budget,setBudget] = useState("")
-const [days,setDays] = useState("")
-const [interests,setInterests] = useState("")
-
-const [result,setResult] = useState<any>(null)
-const [loading,setLoading] = useState(false)
-
-const handleSubmit = async () => {
-
-setLoading(true)
-
-try{
-
-const res = await planTrip({
-start,
-destination,
-budget,
-days,
-interests
-})
-
-console.log("API RESPONSE:",res.data)
-
-// backend response structure
-setResult(res.data.data.plan)
-
-}catch(error){
-
-console.error("Trip planning error:",error)
-
-}
-
-setLoading(false)
-
-}
-
-return(
-
-<DashboardLayout>
-
-<div className="max-w-7xl mx-auto space-y-10">
-
-<motion.h1
-initial={{opacity:0,y:-20}}
-animate={{opacity:1,y:0}}
-className="text-3xl font-bold"
->
-AI Travel Planner
-</motion.h1>
-
-{/* Planner Form */}
-
-<GlassCard>
-
-<div className="grid md:grid-cols-2 gap-4">
-
-<input
-placeholder="Start Location"
-className="bg-black/40 border border-gray-600 p-3 rounded"
-onChange={(e)=>setStart(e.target.value)}
-/>
-
-<input
-placeholder="Destination"
-className="bg-black/40 border border-gray-600 p-3 rounded"
-onChange={(e)=>setDestination(e.target.value)}
-/>
-
-<input
-placeholder="Budget"
-className="bg-black/40 border border-gray-600 p-3 rounded"
-onChange={(e)=>setBudget(e.target.value)}
-/>
-
-<input
-placeholder="Days"
-className="bg-black/40 border border-gray-600 p-3 rounded"
-onChange={(e)=>setDays(e.target.value)}
-/>
-
-</div>
-
-<input
-placeholder="Interests"
-className="bg-black/40 border border-gray-600 p-3 rounded mt-4 w-full"
-onChange={(e)=>setInterests(e.target.value)}
-/>
-
-<button
-onClick={handleSubmit}
-className="mt-5 w-full py-3 bg-blue-600 rounded-lg hover:bg-blue-500 transition"
->
-
-{loading ? "Generating AI Travel Plan..." : "Generate Trip Plan"}
-
-</button>
-
-</GlassCard>
-
-{/* RESULTS */}
-
-{result && (
-
-<div className="grid lg:grid-cols-3 gap-8">
-
-{/* MAP */}
-
-<div className="lg:col-span-2">
-
-<GlassCard>
-
-<h2 className="text-xl mb-4 font-semibold">
-Travel Route
-</h2>
-
-<RouteMap
-route={
-result?.route?.length
-? result.route
-: []
-}
-/>
-
-</GlassCard>
-
-</div>
-
-{/* RIGHT PANEL */}
-
-<div className="space-y-6">
-
-{/* Crowd Prediction */}
-
-{result?.crowd_prediction && (
-
-<CrowdPrediction crowd={result.crowd_prediction}/>
-
-)}
-
-{/* Transport Recommendations */}
-
-{result?.transport?.length > 0 && (
-
-<div>
-
-<h2 className="text-xl font-semibold mb-4">
-Transport Options
-</h2>
-
-<div className="space-y-4">
-
-{result.transport.map((t:any,i:number)=>(
-
-<TransportCard
-key={i}
-transport={{
-type:t.type,
-route:t.route,
-cost:t.cost,
-travel_time:t.travel_time
-}}
-/>
-
-))}
-
-</div>
-
-</div>
-
-)}
-
-</div>
-
-</div>
-
-)}
-
-</div>
-
-</DashboardLayout>
-
-)
-
+const inputClass =
+  "h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:bg-white"
+
+export default function Planner() {
+  const navigate = useNavigate()
+  const [start, setStart] = useState("")
+  const [destination, setDestination] = useState("")
+  const [budget, setBudget] = useState("")
+  const [days, setDays] = useState("")
+  const [interests, setInterests] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+
+  const handleSubmit = async () => {
+    if (!start || !destination || !budget || !days) {
+      setError("Enter start, destination, budget, and days.")
+      return
+    }
+
+    setLoading(true)
+    setError("")
+
+    try {
+      await planTrip({ start, destination, budget, days, interests })
+      navigate("/dashboard")
+    } catch (err) {
+      console.error("Trip planning error:", err)
+      setError("AI planning failed. Check backend logs and OpenRouter key.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <DashboardLayout>
+      <div className="mx-auto max-w-3xl space-y-7">
+        <section className="rounded-[2rem] bg-slate-950 p-6 text-white shadow-2xl sm:p-8">
+          <p className="text-sm font-black uppercase tracking-[0.28em] text-cyan-300">AI Planner</p>
+          <h1 className="mt-4 text-3xl font-black sm:text-5xl">Enter trip details.</h1>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
+            This is the only input screen. After generation, your map, stays, food, famous places, transport, timeline,
+            and dashboard pages update from the saved AI plan.
+          </p>
+        </section>
+
+        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <div className="grid gap-4">
+            <input value={start} placeholder="Start location" className={inputClass} onChange={(e) => setStart(e.target.value)} />
+            <input value={destination} placeholder="Destination" className={inputClass} onChange={(e) => setDestination(e.target.value)} />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <input value={budget} placeholder="Total budget in Rs" className={inputClass} onChange={(e) => setBudget(e.target.value)} />
+              <input value={days} placeholder="Number of days" className={inputClass} onChange={(e) => setDays(e.target.value)} />
+            </div>
+            <textarea
+              value={interests}
+              placeholder="Interests and constraints: beaches, forts, temples, cafes, budget stays, family, solo, food, nightlife..."
+              className="min-h-36 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm font-semibold text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:bg-white"
+              onChange={(e) => setInterests(e.target.value)}
+            />
+
+            {error && <p className="rounded-2xl bg-rose-50 px-4 py-3 text-sm font-bold text-rose-700">{error}</p>}
+
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-slate-950 text-sm font-black text-white transition hover:bg-cyan-700 disabled:cursor-not-allowed disabled:bg-slate-500"
+            >
+              {loading ? <Loader2 className="animate-spin" size={18} /> : <Sparkles size={18} />}
+              {loading ? "Generating real recommendations..." : "Generate AI travel plan"}
+            </button>
+          </div>
+        </section>
+      </div>
+    </DashboardLayout>
+  )
 }

@@ -1,157 +1,73 @@
+import { ArrowRight, MapPinned, Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
+import { Link } from "react-router-dom"
+import TravelGlobe from "./TravelGlobe"
+import { stats } from "../../data/travelData"
 
-export default function Hero(){
+export default function Hero() {
+  return (
+    <section className="relative overflow-hidden bg-slate-950 text-white">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(34,211,238,0.18),transparent_34%),radial-gradient(circle_at_82%_42%,rgba(251,191,36,0.16),transparent_30%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-slate-900 to-transparent" />
 
-return(
+      <div className="relative mx-auto grid min-h-[calc(100vh-76px)] max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:px-8">
+        <motion.div initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100">
+            <Sparkles size={16} />
+            AI-powered city planning for stays, routes, food, and transport
+          </div>
 
-<div className="relative min-h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
+          <h1 className="max-w-4xl text-4xl font-black leading-[1.03] tracking-tight sm:text-6xl lg:text-7xl">
+            AISMART Travel Planner
+          </h1>
 
-{/* background gradient */}
-<div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+          <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
+            A professional trip operating system that turns one destination into a complete plan:
+            maps, hotels, hostels, PG stays, food, famous places, bus, train, flight, and realistic time estimates.
+          </p>
 
-{/* glow effects */}
-<div className="absolute top-20 left-20 w-72 h-72 bg-purple-500/20 blur-[120px] rounded-full"></div>
-<div className="absolute bottom-20 right-20 w-72 h-72 bg-blue-500/20 blur-[120px] rounded-full"></div>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link
+              to="/planner"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-cyan-300 px-6 py-3 text-sm font-black text-slate-950 shadow-[0_0_38px_rgba(103,232,249,0.32)] transition hover:bg-white"
+            >
+              Start Planning <ArrowRight size={18} />
+            </Link>
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/8 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/15"
+            >
+              <MapPinned size={18} /> View Dashboard
+            </Link>
+          </div>
 
-{/* content */}
-<div className="relative z-10 max-w-4xl px-6">
+          <div id="numbers" className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {stats.map((stat) => (
+              <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur">
+                <p className="text-2xl font-black text-white">{stat.value}</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-cyan-100/80">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
 
-{/* Title */}
-
-<motion.h1
-initial={{opacity:0,y:40}}
-animate={{opacity:1,y:0}}
-transition={{duration:0.7}}
-className="text-5xl md:text-6xl font-bold leading-tight"
->
-AI Smart Travel Planner
-</motion.h1>
-
-{/* Subtitle */}
-
-<motion.p
-initial={{opacity:0,y:20}}
-animate={{opacity:1,y:0}}
-transition={{delay:0.2}}
-className="mt-6 text-lg text-gray-300"
->
-Plan smarter trips with AI powered route optimization, crowd prediction and intelligent travel insights.
-</motion.p>
-
-
-{/* Feature badges replacing buttons */}
-
-<motion.div
-initial={{opacity:0,y:20}}
-animate={{opacity:1,y:0}}
-transition={{delay:0.4}}
-className="mt-12 flex flex-wrap justify-center gap-4"
->
-
-<div className="px-5 py-2 bg-white/10 backdrop-blur border border-white/10 rounded-full text-sm text-gray-300">
-AI Route Optimization
-</div>
-
-<div className="px-5 py-2 bg-white/10 backdrop-blur border border-white/10 rounded-full text-sm text-gray-300">
-Live Crowd Prediction
-</div>
-
-<div className="px-5 py-2 bg-white/10 backdrop-blur border border-white/10 rounded-full text-sm text-gray-300">
-Smart Budget Planning
-</div>
-
-<div className="px-5 py-2 bg-white/10 backdrop-blur border border-white/10 rounded-full text-sm text-gray-300">
-Transport Recommendations
-</div>
-
-</motion.div>
-
-
-{/* Stats Section */}
-
-<motion.div
-initial={{opacity:0,y:20}}
-animate={{opacity:1,y:0}}
-transition={{delay:0.6}}
-className="flex justify-center gap-12 mt-12 text-gray-400"
->
-
-<div>
-<p className="text-2xl font-bold text-white">
-10K+
-</p>
-<p className="text-sm">
-Trips Planned
-</p>
-</div>
-
-<div>
-<p className="text-2xl font-bold text-white">
-95%
-</p>
-<p className="text-sm">
-Route Accuracy
-</p>
-</div>
-
-<div>
-<p className="text-2xl font-bold text-white">
-50+
-</p>
-<p className="text-sm">
-Cities Supported
-</p>
-</div>
-
-</motion.div>
-
-
-{/* Feature cards */}
-
-<div className="grid md:grid-cols-3 gap-6 mt-20">
-
-<div className="bg-white/10 backdrop-blur p-6 rounded-xl border border-white/10 hover:border-orange-400 transition">
-
-<h3 className="text-lg font-semibold">
-AI Route Optimization
-</h3>
-
-<p className="text-gray-400 text-sm mt-2">
-Smart travel routes generated using AI and geographic data.
-</p>
-
-</div>
-
-<div className="bg-white/10 backdrop-blur p-6 rounded-xl border border-white/10 hover:border-purple-400 transition">
-
-<h3 className="text-lg font-semibold">
-Crowd Prediction
-</h3>
-
-<p className="text-gray-400 text-sm mt-2">
-Predict crowd levels at tourist spots before you visit.
-</p>
-
-</div>
-
-<div className="bg-white/10 backdrop-blur p-6 rounded-xl border border-white/10 hover:border-blue-400 transition">
-
-<h3 className="text-lg font-semibold">
-Transport Suggestions
-</h3>
-
-<p className="text-gray-400 text-sm mt-2">
-AI recommends flights, trains and buses based on budget.
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-)
-
+        <motion.div
+          initial={{ opacity: 0, scale: 0.94 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="relative"
+        >
+          <div className="absolute inset-6 rounded-full bg-cyan-300/10 blur-3xl" />
+          <TravelGlobe />
+          <div className="absolute bottom-6 left-3 right-3 grid grid-cols-3 gap-2 sm:left-8 sm:right-8">
+            {["Stay", "Route", "Food"].map((item) => (
+              <div key={item} className="rounded-2xl border border-white/10 bg-slate-950/70 px-3 py-3 text-center text-xs font-bold text-slate-100 backdrop-blur">
+                {item}
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  )
 }

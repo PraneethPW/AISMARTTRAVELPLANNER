@@ -1,72 +1,47 @@
 import { motion } from "framer-motion"
 
-export default function Testimonials(){
+export default function Testimonials() {
+  const reviews = [
+    {
+      name: "Sarah",
+      text: "This planner saved me hours of travel planning and gave amazing route suggestions.",
+      initials: "SA",
+    },
+    {
+      name: "Arjun",
+      text: "The AI route optimization is incredible. It suggested faster travel options.",
+      initials: "AR",
+    },
+    {
+      name: "David",
+      text: "Best travel AI I have used. The crowd prediction feature is extremely helpful.",
+      initials: "DA",
+    },
+  ]
 
-const reviews=[
+  return (
+    <section className="px-6 py-24">
+      <h2 className="mb-16 text-center text-4xl font-bold">What Travelers Say</h2>
 
-{
-name:"Sarah",
-text:"This planner saved me hours of travel planning and gave amazing route suggestions.",
-avatar:"https://i.pravatar.cc/100?img=1"
-},
+      <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
+        {reviews.map((review) => (
+          <motion.div
+            key={review.name}
+            whileHover={{ y: -10 }}
+            className="rounded-2xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl transition hover:border-cyan-300"
+          >
+            <p className="mb-6 italic text-gray-300">"{review.text}"</p>
 
-{
-name:"Arjun",
-text:"The AI route optimization is incredible. It suggested faster travel options.",
-avatar:"https://i.pravatar.cc/100?img=3"
-},
+            <div className="flex items-center gap-4">
+              <div className="grid h-10 w-10 place-items-center rounded-full bg-cyan-300 text-sm font-black text-slate-950">
+                {review.initials}
+              </div>
 
-{
-name:"David",
-text:"Best travel AI I have used. The crowd prediction feature is extremely helpful.",
-avatar:"https://i.pravatar.cc/100?img=5"
-}
-
-]
-
-return(
-
-<section className="py-24 px-6">
-
-<h2 className="text-4xl font-bold text-center mb-16">
-What Travelers Say
-</h2>
-
-<div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-
-{reviews.map((r,i)=>(
-
-<motion.div
-key={i}
-whileHover={{y:-10}}
-className="bg-white/10 backdrop-blur-xl border border-white/10 p-8 rounded-2xl hover:border-pink-400 transition"
->
-
-<p className="text-gray-300 italic mb-6">
-"{r.text}"
-</p>
-
-<div className="flex items-center gap-4">
-
-<img
-src={r.avatar}
-className="w-10 h-10 rounded-full"
-/>
-
-<p className="font-semibold">
-{r.name}
-</p>
-
-</div>
-
-</motion.div>
-
-))}
-
-</div>
-
-</section>
-
-)
-
+              <p className="font-semibold">{review.name}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  )
 }

@@ -1,4 +1,5 @@
 import client from "../config/openrouter";
+import { env } from "../config/env";
 
 export const getTransportOptions = async (
   start: string,
@@ -18,7 +19,7 @@ Return structured text.
 `;
 
   const completion = await client.chat.completions.create({
-    model: "openai/gpt-4o-mini",
+    model: env.openRouterModel,
     messages: [
       {
         role: "user",

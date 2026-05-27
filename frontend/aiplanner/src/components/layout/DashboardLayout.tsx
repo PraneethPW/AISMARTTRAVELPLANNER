@@ -1,73 +1,51 @@
 import { useState } from "react"
+import type { ReactNode } from "react"
+import { Menu, Search } from "lucide-react"
 import Sidebar from "./Sidebar"
-import { Menu } from "lucide-react"
 
-export default function DashboardLayout({ children }: any) {
+export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const [open, setOpen] = useState(false)
 
-const [open, setOpen] = useState(false)
+  return (
+    <div className="min-h-screen bg-slate-100 text-slate-950">
+      <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:block">
+        <Sidebar />
+      </div>
 
-return (
+      {open && (
+        <div className="fixed inset-0 z-50 flex lg:hidden">
+          <Sidebar closeSidebar={() => setOpen(false)} />
+          <button aria-label="Close menu" className="flex-1 bg-slate-950/70" onClick={() => setOpen(false)} />
+        </div>
+      )}
 
-<div className="flex min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
+      <div className="lg:pl-72">
+        <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/85 backdrop-blur-xl">
+          <div className="flex items-center gap-3 px-4 py-4 sm:px-6 lg:px-8">
+            <button
+              aria-label="Open menu"
+              onClick={() => setOpen(true)}
+              className="grid h-11 w-11 place-items-center rounded-2xl border border-slate-200 bg-white lg:hidden"
+            >
+              <Menu size={22} />
+            </button>
 
-{/* MOBILE TOP BAR */}
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <input
+                className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm outline-none transition focus:border-cyan-400 focus:bg-white"
+                placeholder="Search destination, food, stays, route..."
+              />
+            </div>
 
-<div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 bg-black/80 backdrop-blur border-b border-white/10">
+            <div className="hidden rounded-2xl bg-slate-950 px-4 py-2 text-sm font-black text-cyan-200 sm:block">
+              AI Travel Ops
+            </div>
+          </div>
+        </header>
 
-<button onClick={() => setOpen(true)}>
-<Menu size={26}/>
-</button>
-
-<h1 className="font-semibold text-lg">
-TravelAI
-</h1>
-
-</div>
-
-
-{/* DESKTOP SIDEBAR */}
-
-<div className="hidden md:block">
-<Sidebar />
-</div>
-
-
-{/* MOBILE SIDEBAR */}
-
-{open && (
-
-<div className="fixed inset-0 z-40 flex">
-
-{/* Sidebar */}
-
-<div className="w-64 bg-black border-r border-white/10">
-
-<Sidebar closeSidebar={() => setOpen(false)} />
-
-</div>
-
-{/* Overlay */}
-
-<div
-className="flex-1 bg-black/60"
-onClick={() => setOpen(false)}
-></div>
-
-</div>
-
-)}
-
-
-{/* MAIN CONTENT */}
-
-<div className="flex-1 p-6 md:p-8 pt-20 md:pt-8 overflow-y-auto">
-
-{children}
-
-</div>
-
-</div>
-
-)
-
+        <main className="px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+      </div>
+    </div>
+  )
 }

@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import pool from "../config/db";
 import { generateTripPlan } from "../services/aiPlannerService";
-import { getHotelSuggestions } from "../services/hotelService";
-import { getTransportOptions } from "../services/transportService";
 
 export const planTrip = async (req: Request, res: Response) => {
 
@@ -24,41 +22,6 @@ interests
 )
 
 
-/* ---------- EXTRA SERVICES ---------- */
-
-const hotelText = await getHotelSuggestions(
-destination,
-parseInt(budget) / parseInt(days)
-)
-
-const transportText = await getTransportOptions(
-start,
-destination
-)
-
-
-/* ---------- FINAL PLAN ---------- */
-
-const finalPlan = {
-
-route: aiPlan.route || [],
-
-transport: aiPlan.transport || [],
-
-crowd_prediction: aiPlan.crowd_prediction || {},
-
-hotels: aiPlan.hotels || [],
-
-places: aiPlan.places || [],
-
-extra: {
-hotelSuggestions: hotelText,
-transportSuggestions: transportText
-}
-
-}
-
-
 /* ---------- SAVE TRIP ---------- */
 
 const result = await pool.query(
@@ -75,7 +38,7 @@ destination,
 parseInt(budget),
 parseInt(days),
 interests,
-JSON.stringify(finalPlan)
+JSON.stringify(aiPlan)
 ]
 
 )

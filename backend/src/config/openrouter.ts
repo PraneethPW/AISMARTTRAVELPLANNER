@@ -1,11 +1,12 @@
 import OpenAI from "openai";
+import { env } from "./env";
 
 const client = new OpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: env.openRouterBaseUrl,
+  apiKey: env.openRouterApiKey,
   defaultHeaders: {
-    "HTTP-Referer": "https://aismarttravelplanner-production.up.railway.app",
-    "X-Title": "AI Smart Travel Planner"
+    "HTTP-Referer": env.appUrl,
+    "X-Title": "AISMART Travel Planner"
   }
 });
 
