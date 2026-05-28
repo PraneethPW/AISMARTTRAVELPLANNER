@@ -128,5 +128,5 @@ export default function TravelGlobe() {
     }
   }, [])
 
-  return <div ref={mountRef} className="h-[360px] w-full sm:h-[460px] lg:h-[560px]" />
+  return <div ref={mountRef} className="h-[300px] w-full sm:h-[460px] lg:h-[560px]" />
 }

@@ -39,17 +39,17 @@ export default function Planner() {
 
   return (
     <DashboardLayout>
-      <div className="mx-auto max-w-3xl space-y-7">
-        <section className="rounded-[2rem] bg-slate-950 p-6 text-white shadow-2xl sm:p-8">
+      <div className="mx-auto max-w-3xl space-y-5 sm:space-y-7">
+        <section className="rounded-3xl bg-slate-950 p-4 text-white shadow-2xl sm:rounded-[2rem] sm:p-8">
           <p className="text-sm font-black uppercase tracking-[0.28em] text-cyan-300">AI Planner</p>
-          <h1 className="mt-4 text-3xl font-black sm:text-5xl">Enter trip details.</h1>
+          <h1 className="mt-4 text-2xl font-black sm:text-5xl">Enter trip details.</h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
             This is the only input screen. After generation, your map, stays, food, famous places, transport, timeline,
             and dashboard pages update from the saved AI plan.
           </p>
         </section>
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
           <div className="grid gap-4">
             <input value={start} placeholder="Start location" className={inputClass} onChange={(e) => setStart(e.target.value)} />
             <input value={destination} placeholder="Destination" className={inputClass} onChange={(e) => setDestination(e.target.value)} />

@@ -55,7 +55,7 @@ export default function RouteMap({ route }: { route: RoutePoint[] }) {
 
   if (validRoute.length === 0) {
     return (
-      <div className="flex h-[420px] items-center justify-center bg-slate-100">
+      <div className="flex h-[320px] items-center justify-center bg-slate-100 sm:h-[420px]">
         <p className="text-sm font-bold text-slate-500">Generate a trip to load the route map</p>
       </div>
     )
@@ -65,7 +65,13 @@ export default function RouteMap({ route }: { route: RoutePoint[] }) {
   const center: [number, number] = positions[0] || [20, 77]
 
   return (
-    <MapContainer key={positions.map(([lat, lng]) => `${lat},${lng}`).join("|")} center={center} zoom={5} style={{ height: "420px", width: "100%" }} scrollWheelZoom>
+    <MapContainer
+      key={positions.map(([lat, lng]) => `${lat},${lng}`).join("|")}
+      center={center}
+      zoom={5}
+      className="h-[320px] w-full sm:h-[420px]"
+      scrollWheelZoom
+    >
       <TileLayer url={mapTileUrl} />
       <FitBounds positions={positions} />
 

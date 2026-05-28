@@ -4,7 +4,7 @@ import Logo from "../brand/Logo"
 export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/75 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-w-0 max-w-7xl items-center justify-between gap-3 px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
         <Logo />
 
         <nav className="hidden items-center gap-7 text-sm font-medium text-slate-300 md:flex">
@@ -29,7 +29,7 @@ export default function Navbar() {
 
           <Link
             to="/register"
-            className="rounded-full bg-cyan-300 px-5 py-2.5 text-sm font-black text-slate-950 shadow-[0_0_30px_rgba(103,232,249,0.35)] transition hover:bg-white"
+            className="shrink-0 rounded-full bg-cyan-300 px-4 py-2.5 text-sm font-black text-slate-950 shadow-[0_0_30px_rgba(103,232,249,0.35)] transition hover:bg-white sm:px-5"
           >
             Sign Up
           </Link>

@@ -15,7 +15,7 @@ export default function Login() {
   }
 
   return (
-    <div className="grid min-h-screen bg-slate-950 text-white lg:grid-cols-[1fr_0.9fr]">
+    <div className="grid min-h-screen overflow-x-hidden bg-slate-950 text-white lg:grid-cols-[1fr_0.9fr]">
       <section className="hidden bg-[radial-gradient(circle_at_30%_20%,rgba(34,211,238,0.24),transparent_36%),radial-gradient(circle_at_74%_60%,rgba(251,191,36,0.18),transparent_32%)] p-10 lg:flex lg:flex-col lg:justify-between">
         <Logo />
         <div>
@@ -24,12 +24,12 @@ export default function Login() {
         </div>
       </section>
 
-      <section className="flex items-center justify-center px-4 py-10">
-        <div className="w-full max-w-md rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 backdrop-blur sm:p-8">
+      <section className="flex items-center justify-center px-3 py-8 sm:px-4 sm:py-10">
+        <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur sm:rounded-[2rem] sm:p-8">
           <div className="mb-8 lg:hidden">
             <Logo />
           </div>
-          <h2 className="text-3xl font-black">Login</h2>
+          <h2 className="text-2xl font-black sm:text-3xl">Login</h2>
           <p className="mt-2 text-sm text-slate-400">Access your AI travel dashboard.</p>
 
           <div className="mt-7 space-y-4">

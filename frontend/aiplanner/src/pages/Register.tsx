@@ -25,7 +25,7 @@ export default function Register() {
   }
 
   return (
-    <div className="grid min-h-screen bg-slate-950 text-white lg:grid-cols-[1fr_0.9fr]">
+    <div className="grid min-h-screen overflow-x-hidden bg-slate-950 text-white lg:grid-cols-[1fr_0.9fr]">
       <section className="hidden bg-[radial-gradient(circle_at_26%_24%,rgba(52,211,153,0.2),transparent_34%),radial-gradient(circle_at_78%_54%,rgba(34,211,238,0.18),transparent_34%)] p-10 lg:flex lg:flex-col lg:justify-between">
         <Logo />
         <div>
@@ -34,12 +34,12 @@ export default function Register() {
         </div>
       </section>
 
-      <section className="flex items-center justify-center px-4 py-10">
-        <div className="w-full max-w-md rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 backdrop-blur sm:p-8">
+      <section className="flex items-center justify-center px-3 py-8 sm:px-4 sm:py-10">
+        <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur sm:rounded-[2rem] sm:p-8">
           <div className="mb-8 lg:hidden">
             <Logo />
           </div>
-          <h2 className="text-3xl font-black">Create account</h2>
+          <h2 className="text-2xl font-black sm:text-3xl">Create account</h2>
           <p className="mt-2 text-sm text-slate-400">Set up your AI travel workspace.</p>
 
           <div className="mt-7 space-y-4">
